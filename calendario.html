@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexTracker | Calendario de Audiencias</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <style>
+        :root {
+            --bg-main: #121212;
+            --bg-sidebar: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --accent-gold: #c9a55c;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background-color: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar { width: 280px; background-color: var(--bg-sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid var(--border-color); }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 20px 10px; margin-bottom: 30px; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: 8px; margin-bottom: 8px; transition: 0.3s; font-weight: 500; }
+        .nav-item:hover { background: rgba(201, 165, 92, 0.1); color: var(--text-main); }
+        .nav-item.active { background-color: var(--accent-gold); color: #000; font-weight: bold; }
+        .logo-icon { color: var(--accent-gold); font-size: 2.2rem; }
+        .logo-text { font-weight: bold; font-size: 1.5rem; letter-spacing: 1px; }
+
+        /* MAIN CONTENT */
+        .main-content { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        /* TOP BAR */
+        .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 15px 50px; background: var(--bg-main); border-bottom: 1px solid var(--border-color); gap: 25px; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-name { text-align: right; }
+        .user-name div { font-weight: bold; font-size: 0.95rem; }
+        .user-name span { font-size: 0.8rem; color: var(--accent-gold); }
+        .avatar { width: 45px; height: 45px; background: var(--bg-card); border: 1px solid var(--accent-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-gold); }
+
+        /* HEADER ACCIONES */
+        .header-section { display: flex; justify-content: space-between; align-items: center; padding: 30px 50px 10px 50px; }
+        .page-title { font-size: 2rem; font-weight: bold; margin: 0; }
+        .btn-add { background-color: var(--accent-gold); color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+
+        /* CONTROLES DE VISTA */
+        .view-controls { display: flex; background: var(--bg-sidebar); padding: 5px; border-radius: 10px; margin: 20px 50px; width: fit-content; border: 1px solid var(--border-color); }
+        .control-btn { padding: 10px 25px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 8px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .control-btn.active { background: var(--accent-gold); color: #000; }
+
+        /* SECCIONES CONTENIDO */
+        .content-section { padding: 0 50px 40px 50px; display: none; }
+        .content-section.active { display: block; }
+
+        /* CALENDARIO ESTILO OSCURO */
+        #calendar { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); min-height: 600px; }
+        .fc { color: white; }
+        .fc-toolbar-title { color: var(--accent-gold) !important; }
+        .fc-button-primary { background-color: var(--accent-gold) !important; border-color: var(--accent-gold) !important; color: black !important; font-weight: bold !important; }
+
+        /* TABLA LISTA */
+        .table-container { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 18px 20px; text-align: left; background: rgba(201, 165, 92, 0.05); color: var(--accent-gold); font-size: 0.8rem; border-bottom: 1px solid var(--border-color); }
+        td { padding: 18px 20px; border-bottom: 1px solid var(--border-color); }
+
+        /* MODALES */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        .modal-content { background: var(--bg-card); margin: 5% auto; padding: 30px; border: 1px solid var(--accent-gold); width: 450px; border-radius: 15px; position: relative; }
+        .modal-header { color: var(--accent-gold); font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .close { position: absolute; top: 15px; right: 20px; color: var(--text-muted); cursor: pointer; font-size: 24px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.75rem; color: var(--accent-gold); margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid var(--border-color); border-radius: 5px; color: white; box-sizing: border-box; }
+        .btn-submit { width: 100%; background: var(--accent-gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        .logout { margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="material-symbols-outlined logo-icon">gavel</span>
+            <span class="logo-text">LexTracker</span>
+        </div>
+        <nav style="flex-grow: 1;">
+            <a href="dashboard.html" class="nav-item">
+                <span class="material-symbols-outlined">dashboard</span> Panel de Control
+            </a>
+            <a href="mis-juicios.html" class="nav-item">
+                <span class="material-symbols-outlined">work</span> Mis Juicios
+            </a>
+            <a href="notificaciones.html" class="nav-item">
+                <span class="material-symbols-outlined">notifications</span> Notificaciones
+            </a>
+            <a href="calendario.html" class="nav-item active">
+                <span class="material-symbols-outlined">calendar_month</span> Calendario
+            </a>
+            <a href="facturacion.html" class="nav-item">
+                <span class="material-symbols-outlined">payments</span> Facturación
+            </a>
+            <a href="configuraciones.html" class="nav-item">
+                <span class="material-symbols-outlined">settings</span> Configuraciones
+            </a>
+        </nav>
+        <div class="logout">
+            <a href="index.html" class="nav-item">
+                <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="user-info">
+                <div class="user-name">
+                    <div>Dr. Jose Enrique Nowak</div>
+                    <span>Usuario Premium</span>
+                </div>
+                <div class="avatar"><span class="material-symbols-outlined">person</span></div>
+            </div>
+        </header>
+
+        <div class="header-section">
+            <h1 class="page-title">Calendario de Audiencias</h1>
+            <button class="btn-add" onclick="openAddModal()">
+                <span class="material-symbols-outlined">add</span> Agregar Audiencia
+            </button>
+        </div>
+
+        <div class="view-controls">
+            <button class="control-btn active" id="btnCal" onclick="switchView('calendar-view', this)">
+                <span class="material-symbols-outlined">calendar_view_month</span> Mostrar Calendario
+            </button>
+            <button class="control-btn" id="btnList" onclick="switchView('list-view', this)">
+                <span class="material-symbols-outlined">format_list_bulleted</span> Mostrar Lista
+            </button>
+        </div>
+
+        <section id="calendar-view" class="content-section active">
+            <div id="calendar"></div>
+        </section>
+
+        <section id="list-view" class="content-section">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>No. Juicio</th>
+                            <th>Actor / Cliente</th>
+                            <th>Demandado</th>
+                            <th>Asunto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaAudiencias"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddModal()">&times;</span>
+            <div class="modal-header">Nueva Audiencia</div>
+            <form id="audienciaForm">
+                <div class="form-group"><label>No. Juicio</label><input type="text" id="numJuicio" required></div>
+                <div class="form-group"><label>Actor</label><input type="text" id="actor" required></div>
+                <div class="form-group"><label>Demandado</label><input type="text" id="demandado" required></div>
+                <div class="form-group"><label>Asunto</label><input type="text" id="asunto" required></div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;"><label>Fecha</label><input type="date" id="fecha" required></div>
+                    <div class="form-group" style="flex: 1;"><label>Hora</label><input type="time" id="hora" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
+
+    <script>
+        let audiencias = JSON.parse(localStorage.getItem('audiencias')) || [];
+        let calendar;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
+                events: audiencias.map(a => ({ title: `Juicio: ${a.id}`, start: a.start, extendedProps: a })),
+                eventClick: (info) => alert(`Juicio: ${info.event.extendedProps.id}\nActor: ${info.event.extendedProps.actor}\nAsunto: ${info.event.extendedProps.del}`)
+            });
+            calendar.render();
+            actualizarLista();
+        });
+
+        function switchView(viewId, btn) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            btn.classList.add('active');
+            if(viewId === 'calendar-view') {
+                setTimeout(() => { calendar.render(); calendar.updateSize(); }, 50);
+            }
+        }
+
+        document.getElementById('audienciaForm').onsubmit = function(e) {
+            e.preventDefault();
+            const nueva = {
+                id: document.getElementById('numJuicio').value,
+                actor: document.getElementById('actor').value,
+                dem: document.getElementById('demandado').value,
+                del: document.getElementById('asunto').value,
+                start: `${document.getElementById('fecha').value}T${document.getElementById('hora').value}:00`
+            };
+            audiencias.push(nueva);
+            localStorage.setItem('audiencias', JSON.stringify(audiencias));
+            calendar.addEvent({ title: `Juicio: ${nueva.id}`, start: nueva.start, extendedProps: nueva });
+            actualizarLista();
+            closeAddModal();
+            this.reset();
+        };
+
+        function actualizarLista() {
+            const tbody = document.getElementById('listaAudiencias');
+            const ordenadas = [...audiencias].sort((a, b) => new Date(a.start) - new Date(b.start));
+            tbody.innerHTML = ordenadas.map(a => `
+                <tr>
+                    <td style="color: var(--accent-gold); font-weight: bold;">${new Date(a.start).toLocaleString()}</td>
+                    <td>${a.id}</td><td>${a.actor}</td><td>${a.dem}</td><td>${a.del}</td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddModal() { document.getElementById('addModal').style.display = "block"; }
+        function closeAddModal() { document.getElementById('addModal').style.display = "none"; }
+    </script>
+</body>
+</html>

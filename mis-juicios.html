@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexTracker | Mis Juicios</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --bg-main: #121212;
+            --bg-sidebar: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --accent-gold: #c9a55c;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; background-color: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar { width: 280px; background-color: var(--bg-sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid var(--border-color); }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 20px 10px; margin-bottom: 30px; }
+        .logo-icon { color: var(--accent-gold); font-size: 2.2rem; }
+        .logo-text { font-weight: bold; font-size: 1.5rem; color: var(--text-main); }
+        .nav-menu { flex-grow: 1; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: 5px; margin-bottom: 8px; transition: all 0.3s; font-weight: 500; }
+        .nav-item.active { background-color: var(--accent-gold); color: #000; }
+        .nav-item:hover:not(.active) { color: var(--accent-gold); background-color: rgba(201, 165, 92, 0.05); }
+        .logout { margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 20px; }
+
+        /* TOP BAR */
+        .main-content { flex-grow: 1; overflow-y: auto; padding: 30px 50px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .search-box { background: #1e1e1e; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; width: 450px; }
+        .search-box input { background: none; border: none; color: white; outline: none; width: 100%; font-size: 0.9rem; }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-name { text-align: right; }
+        .user-name div { font-size: 0.95rem; font-weight: bold; }
+        .user-name span { font-size: 0.8rem; color: var(--accent-gold); }
+        .avatar { width: 42px; height: 42px; background: var(--bg-card); border: 1px solid var(--accent-gold); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--accent-gold); }
+
+        /* TABLA Y FILTROS */
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn-add { background: var(--accent-gold); color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .table-container { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border-color); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { padding: 15px; text-align: left; background: rgba(201, 165, 92, 0.05); color: var(--accent-gold); font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
+        td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; vertical-align: middle; }
+
+        .no-wrap { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Fila de Filtros */
+        .filter-row { background: #161616; }
+        .filter-row td { padding: 8px 10px; }
+        .filter-input { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.8rem; box-sizing: border-box; }
+        
+        .status-select { background: #121212; color: #22c55e; border: 1px solid #333; padding: 5px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; width: 100%; }
+        .status-select.inactivo { color: var(--danger); border-color: var(--danger); }
+        .status-select.detenido { color: var(--warning); border-color: var(--warning); }
+        .status-select.cerrado { color: #888; border-color: #444; }
+        
+        .detail-row { display: none; background: #161616; }
+        .detail-wrapper { padding: 25px; border-bottom: 2px solid var(--accent-gold); }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .detail-box label { color: var(--accent-gold); font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .detail-box input, .detail-box textarea { background: #252525; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; font-family: inherit; }
+        .full-width { grid-column: span 2; }
+
+        .btn-satje { background: #252525; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 10px; }
+        
+        /* TAG DE FACTURACIÓN */
+        .tag-billing { color: #000; background: var(--accent-gold); padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; margin-left: 8px; display: none; }
+        .tag-billing.active { display: inline-block; }
+        
+        .btn-icon { background: none; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { color: var(--accent-gold); }
+        .btn-icon.active { color: var(--accent-gold); }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: var(--bg-sidebar); width: 500px; padding: 35px; border-radius: 15px; border: 1px solid var(--accent-gold); max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.8rem; color: var(--accent-gold); }
+        .form-group input { width: 100%; padding: 12px; background: #252525; border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; }
+
+        .excel-section { border-top: 1px solid var(--border-color); margin-top: 20px; padding-top: 20px; text-align: center; }
+        .excel-info { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; }
+
+        /* Columnas fijas */
+        .col-id { width: 220px; }
+        .col-est { width: 130px; }
+        .col-acc { width: 90px; }
+    </style>
+</head>
+<body onload="cargarDatos()">
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="material-symbols-outlined logo-icon">gavel</span>
+            <span class="logo-text">LexTracker</span>
+        </div>
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item">
+                <span class="material-symbols-outlined">dashboard</span> Panel de Control
+            </a>
+            <a href="mis-juicios.html" class="nav-item active">
+                <span class="material-symbols-outlined">work</span> Mis Juicios
+            </a>
+            <a href="notificaciones.html" class="nav-item">
+                <span class="material-symbols-outlined">notifications</span> Notificaciones
+            </a>
+            <a href="calendario.html" class="nav-item">
+                <span class="material-symbols-outlined">calendar_month</span> Calendario
+            </a>
+            <a href="facturacion.html" class="nav-item">
+                <span class="material-symbols-outlined">payments</span> Facturación
+            </a>
+            <a href="configuraciones.html" class="nav-item">
+                <span class="material-symbols-outlined">settings</span> Configuraciones
+            </a>
+        </nav>
+        <div class="logout">
+            <a href="index.html" class="nav-item">
+                <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="search-box">
+                <span class="material-symbols-outlined" style="color: var(--accent-gold)">search</span>
+                <input type="text" placeholder="Búsqueda rápida..." onkeyup="filtrarGlobal(this.value)">
+            </div>
+            <div class="user-info">
+                <div class="user-name">
+                    <div>Dr. Jose Enrique Nowak Luque</div>
+                    <span>Usuario Abogado</span>
+                </div>
+                <div class="avatar"><span class="material-symbols-outlined">person</span></div>
+            </div>
+        </header>
+
+        <section class="header-flex">
+            <div>
+                <h1>Mis Juicios</h1>
+                <p style="color: var(--accent-gold); margin-top: 5px;">Control de caducidad y seguimiento detallado.</p>
+            </div>
+            <button class="btn-add" onclick="document.getElementById('modalAdd').style.display='flex'">
+                <span class="material-symbols-outlined">add</span> Agregar Juicios
+            </button>
+        </section>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-id">No. de Juicio</th>
+                        <th>Actor</th>
+                        <th>Demandado</th>
+                        <th>Delito / Acto</th>
+                        <th class="col-est">Estado</th>
+                        <th class="col-acc">Acciones</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <td><input type="text" class="filter-input" placeholder="Filtrar Nº..." onkeyup="filtrarPorColumna()"></td>
+                        <td><input type="text" class="filter-input" placeholder="Filtrar Actor..." onkeyup="filtrarPorColumna()"></td>
+                        <td><input type="text" class="filter-input" placeholder="Filtrar Dem..." onkeyup="filtrarPorColumna()"></td>
+                        <td><input type="text" class="filter-input" placeholder="Filtrar Delito..." onkeyup="filtrarPorColumna()"></td>
+                        <td><input type="text" class="filter-input" placeholder="Estado..." onkeyup="filtrarPorColumna()"></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody id="tablaCuerpo"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="modalAdd" class="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--accent-gold); margin-top: 0;">Agregar Procesos</h2>
+            <div class="form-group"><label>Número de Juicio</label><input type="text" id="m_id" placeholder="09XXX-202X-XXXXX"></div>
+            <div class="form-group"><label>Actor</label><input type="text" id="m_actor"></div>
+            <div class="form-group"><label>Demandado</label><input type="text" id="m_dem"></div>
+            <div class="form-group"><label>Delito / Asunto</label><input type="text" id="m_del"></div>
+            <button onclick="guardarManual()" style="width: 100%; background: var(--accent-gold); padding: 12px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom: 10px;">GUARDAR MANUALMENTE</button>
+            
+            <div class="excel-section">
+                <p class="excel-info">O sube un archivo <b>.csv</b> (Excel) con las columnas:<br><i>No Juicio, Actor, Demandado, Delito</i></p>
+                <input type="file" id="excelFile" accept=".csv" style="display: none;" onchange="importarCSV(this)">
+                <button onclick="document.getElementById('excelFile').click()" style="width: 100%; background: #252525; color: white; border: 1px dashed var(--accent-gold); padding: 10px; border-radius: 8px; cursor: pointer;">
+                    <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2rem;">upload_file</span> CARGAR EXCEL (.CSV)
+                </button>
+            </div>
+
+            <button onclick="document.getElementById('modalAdd').style.display='none'" style="width: 100%; background: none; border: none; color: var(--text-muted); cursor: pointer; margin-top: 15px;">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        let juicios = JSON.parse(localStorage.getItem('juicios_db')) || [];
+
+        function cargarDatos() {
+            const cuerpo = document.getElementById('tablaCuerpo');
+            const hoy = new Date();
+
+            juicios.forEach(j => {
+                if (j.fEsc) {
+                    const ultimaFecha = new Date(j.fEsc);
+                    const difDias = (hoy - ultimaFecha) / (1000 * 60 * 60 * 24);
+                    if (difDias > 30 && j.est !== 'CERRADO' && j.est !== 'DETENIDO') j.est = 'INACTIVO';
+                }
+            });
+
+            juicios.sort((a, b) => {
+                if (a.est === 'CERRADO' && b.est !== 'CERRADO') return 1;
+                if (a.est !== 'CERRADO' && b.est === 'CERRADO') return -1;
+                return 0;
+            });
+
+            cuerpo.innerHTML = juicios.map((j, i) => `
+                <tr id="row-${i}" class="data-row" onclick="if(event.target.tagName !== 'SPAN' && event.target.tagName !== 'BUTTON' && event.target.tagName !== 'SELECT' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') toggleDetalle(${i})">
+                    <td class="no-wrap" style="color: var(--accent-gold); font-weight: bold;">
+                        ${j.id} <span class="tag-billing ${j.facturar ? 'active' : ''}">POR COBRAR</span>
+                    </td>
+                    <td class="no-wrap">${j.actor}</td>
+                    <td class="no-wrap">${j.dem}</td>
+                    <td class="no-wrap">${j.del}</td>
+                    <td>
+                        <select class="status-select ${j.est.toLowerCase()}" onchange="cambiarEstado(${i}, this.value)">
+                            <option value="ACTIVO" ${j.est === 'ACTIVO' ? 'selected' : ''}>ACTIVO</option>
+                            <option value="INACTIVO" ${j.est === 'INACTIVO' ? 'selected' : ''}>INACTIVO</option>
+                            <option value="DETENIDO" ${j.est === 'DETENIDO' ? 'selected' : ''}>DETENIDO</option>
+                            <option value="CERRADO" ${j.est === 'CERRADO' ? 'selected' : ''}>CERRADO</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn-icon ${j.facturar ? 'active' : ''}" onclick="marcarFactura(${i})" title="Marcar para Facturación">
+                            <span class="material-symbols-outlined">payments</span>
+                        </button>
+                        <button class="btn-icon" onclick="borrarJuicio(${i})" title="Eliminar">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </td>
+                </tr>
+                <tr id="det-${i}" class="detail-row">
+                    <td colspan="6">
+                        <div class="detail-wrapper">
+                            <div class="detail-grid">
+                                <div class="detail-box">
+                                    <label>Última Providencia</label>
+                                    <input type="text" value="${j.fProv || ''}" onchange="actualizarCampo(${i}, 'fProv', this.value)">
+                                </div>
+                                <div class="detail-box">
+                                    <label>Juez / Tribunal</label>
+                                    <input type="text" value="${j.juez || ''}" onchange="actualizarCampo(${i}, 'juez', this.value)">
+                                </div>
+                                <div class="detail-box full-width">
+                                    <label>Texto de la Providencia</label>
+                                    <textarea rows="3" onchange="actualizarCampo(${i}, 'prov', this.value)">${j.prov || ''}</textarea>
+                                </div>
+                                <div class="detail-box">
+                                    <label>Fecha Último Escrito (Control 30 días)</label>
+                                    <input type="date" value="${j.fEsc || ''}" onchange="actualizarCampo(${i}, 'fEsc', this.value); cargarDatos();">
+                                    <button class="btn-satje" onclick="verEnSatje('${j.id}')">
+                                        <span class="material-symbols-outlined">open_in_new</span> VER EN SATJE
+                                    </button>
+                                </div>
+                                <div class="detail-box">
+                                    <label>Notas Estratégicas</label>
+                                    <textarea rows="5" onkeyup="actualizarCampo(${i}, 'notas', this.value)">${j.notas || ''}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const filtroExterno = urlParams.get('filtro');
+            if (filtroExterno) {
+                const inputs = document.querySelectorAll('.filter-input');
+                if (inputs[4]) {
+                    inputs[4].value = filtroExterno;
+                    filtrarPorColumna();
+                }
+            }
+        }
+
+        function marcarFactura(i) {
+            juicios[i].facturar = !juicios[i].facturar;
+            localStorage.setItem('juicios_db', JSON.stringify(juicios));
+            
+            if(juicios[i].facturar) {
+                if(confirm("Juicio marcado para facturación. ¿Deseas ir a la liquidación de honorarios ahora?")) {
+                    window.location.href = 'facturacion.html';
+                } else {
+                    cargarDatos();
+                }
+            } else {
+                cargarDatos();
+            }
+        }
+
+        function actualizarCampo(i, campo, valor) {
+            juicios[i][campo] = valor;
+            localStorage.setItem('juicios_db', JSON.stringify(juicios));
+        }
+
+        function cambiarEstado(i, val) {
+            juicios[i].est = val;
+            localStorage.setItem('juicios_db', JSON.stringify(juicios));
+            cargarDatos();
+        }
+
+        function filtrarPorColumna() {
+            const inputs = document.querySelectorAll('.filter-input');
+            const filas = document.querySelectorAll('.data-row');
+            filas.forEach(fila => {
+                let mostrar = true;
+                inputs.forEach((input, index) => {
+                    const query = input.value.toLowerCase();
+                    const celda = fila.cells[index];
+                    let textoCelda = (index === 4) ? celda.querySelector('select').value.toLowerCase() : celda.innerText.toLowerCase();
+                    if (query && !textoCelda.includes(query)) mostrar = false;
+                });
+                fila.style.display = mostrar ? '' : 'none';
+            });
+        }
+
+        function filtrarGlobal(val) {
+            const query = val.toLowerCase();
+            document.querySelectorAll('.data-row').forEach(fila => {
+                fila.style.display = fila.innerText.toLowerCase().includes(query) ? '' : 'none';
+            });
+        }
+
+        function verEnSatje(id) {
+            navigator.clipboard.writeText(id).then(() => {
+                window.open("https://procesosjudiciales.funcionjudicial.gob.ec/busqueda-filtros", "_blank");
+            });
+        }
+
+        function borrarJuicio(i) {
+            if(confirm("¿Eliminar registro?")) {
+                juicios.splice(i, 1);
+                localStorage.setItem('juicios_db', JSON.stringify(juicios));
+                cargarDatos();
+            }
+        }
+
+        function guardarManual() {
+            const nuevo = {
+                id: document.getElementById('m_id').value || "N/A",
+                actor: document.getElementById('m_actor').value || "N/A",
+                dem: document.getElementById('m_dem').value || "N/A",
+                del: document.getElementById('m_del').value || "N/A",
+                est: "ACTIVO", facturar: false, fProv: "", juez: "", prov: "", fEsc: "", notas: ""
+            };
+            juicios.push(nuevo);
+            localStorage.setItem('juicios_db', JSON.stringify(juicios));
+            cargarDatos();
+            document.getElementById('modalAdd').style.display = 'none';
+        }
+
+        function importarCSV(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const lines = e.target.result.split('\n');
+                lines.forEach((line, index) => {
+                    if (index === 0 || line.trim() === "") return;
+                    const cols = line.split(',');
+                    if (cols.length >= 4) {
+                        juicios.push({
+                            id: cols[0].trim(), actor: cols[1].trim(), dem: cols[2].trim(), del: cols[3].trim(),
+                            est: "ACTIVO", facturar: false, fProv: "", juez: "", prov: "", fEsc: "", notas: ""
+                        });
+                    }
+                });
+                localStorage.setItem('juicios_db', JSON.stringify(juicios));
+                cargarDatos();
+                document.getElementById('modalAdd').style.display = 'none';
+                alert("Importación completada");
+            };
+            reader.readAsText(file);
+        }
+
+        function toggleDetalle(i) {
+            const d = document.getElementById(`det-${i}`);
+            const allD = document.querySelectorAll('.detail-row');
+            allD.forEach(row => { if(row.id !== `det-${i}`) row.style.display = 'none'; });
+            d.style.display = d.style.display === 'table-row' ? 'none' : 'table-row';
+        }
+    </script>
+</body>
+</html>

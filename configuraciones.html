@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexTracker | Configuraciones</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --bg-main: #121212;
+            --bg-sidebar: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --accent-gold: #c9a55c;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --success: #4caf50;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background-color: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR (Consistente con el resto) */
+        .sidebar { width: 280px; background-color: var(--bg-sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid var(--border-color); }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 20px 10px; margin-bottom: 30px; }
+        .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: 8px; margin-bottom: 8px; transition: 0.3s; }
+        .nav-item:hover { background: rgba(201, 165, 92, 0.1); color: var(--text-main); }
+        .nav-item.active { background-color: var(--accent-gold); color: #000; font-weight: bold; }
+        .logo-icon { color: var(--accent-gold); font-size: 2.2rem; }
+        .logo-text { font-weight: bold; font-size: 1.5rem; letter-spacing: 1px; }
+
+        .main-content { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 0 50px 50px 50px; }
+        
+        .page-header { padding: 40px 0 20px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 30px; }
+        .page-title { font-size: 2rem; margin: 0; }
+
+        /* GRID DE CONFIGURACIÓN */
+        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; }
+        
+        .config-card { background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px; }
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; color: var(--accent-gold); border-bottom: 1px solid rgba(201, 165, 92, 0.1); padding-bottom: 15px; }
+        .card-header span { font-size: 1.8rem; }
+        .card-header h3 { margin: 0; font-size: 1.2rem; }
+
+        /* FORMULARIOS */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid var(--border-color); border-radius: 8px; color: white; box-sizing: border-box; outline: none; }
+        .form-group input:focus { border-color: var(--accent-gold); }
+
+        .btn-save { background: var(--accent-gold); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-save:hover { background: #b08d4a; }
+
+        /* PLANES INFO */
+        .plan-badge { background: var(--accent-gold); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-left: 10px; }
+        .limit-info { background: rgba(255, 255, 255, 0.03); border-radius: 10px; padding: 15px; margin-top: 15px; border-left: 3px solid var(--accent-gold); }
+        .limit-item { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
+        .limit-value { font-weight: bold; color: var(--accent-gold); }
+
+        .user-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        .user-role { font-size: 0.75rem; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 2px 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="material-symbols-outlined logo-icon">gavel</span>
+            <span class="logo-text">LexTracker</span>
+        </div>
+        <nav style="flex-grow: 1;">
+            <a href="dashboard.html" class="nav-item">
+                <span class="material-symbols-outlined">dashboard</span> Panel de Control
+            </a>
+            <a href="mis-juicios.html" class="nav-item">
+                <span class="material-symbols-outlined">work</span> Mis Juicios
+            </a>
+            <a href="notificaciones.html" class="nav-item">
+                <span class="material-symbols-outlined">notifications</span> Notificaciones
+            </a>
+            <a href="calendario.html" class="nav-item">
+                <span class="material-symbols-outlined">calendar_month</span> Calendario
+            </a>
+            <a href="facturacion.html" class="nav-item">
+                <span class="material-symbols-outlined">payments</span> Facturación
+            </a>
+            <a href="configuraciones.html" class="nav-item active">
+                <span class="material-symbols-outlined">settings</span> Configuraciones
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Configuración del Perfil <span class="plan-badge">PLAN PREMIUM</span></h1>
+        </div>
+
+        <div class="config-grid">
+            <div class="config-card">
+                <div class="card-header">
+                    <span class="material-symbols-outlined">sync</span>
+                    <h3>Integraciones Automáticas</h3>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -15px;">Configura las credenciales para el scraping de providencias y avisos.</p>
+                
+                <form>
+                    <div class="form-group">
+                        <label>Correo Electrónico Judicial</label>
+                        <input type="email" placeholder="abogado@ejemplo.com" value="j.nowak@estudio.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña de Aplicación (Correo)</label>
+                        <input type="password" placeholder="••••••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>Número de WhatsApp para Alertas</label>
+                        <input type="tel" placeholder="+593 999 999 999" value="+593 987654321">
+                    </div>
+                    <button type="button" class="btn-save">Actualizar Conexiones</button>
+                </form>
+            </div>
+
+            <div class="config-card">
+                <div class="card-header">
+                    <span class="material-symbols-outlined">group</span>
+                    <h3>Gestión de Equipo</h3>
+                </div>
+                
+                <div class="limit-info">
+                    <div class="limit-item"><span>Juicios permitidos:</span> <span class="limit-value">Ilimitados</span></div>
+                    <div class="limit-item"><span>Abogados adicionales:</span> <span class="limit-value">4 restantes</span></div>
+                    <div class="limit-item"><span>Asistentes permitidos:</span> <span class="limit-value">10 restantes</span></div>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Usuarios con acceso:</label>
+                    <div class="user-list-item">
+                        <span>Dr. Jose Enrique Nowak (Tú)</span>
+                        <span class="user-role">Titular</span>
+                    </div>
+                    <div class="user-list-item">
+                        <span>Dra. Maria Lopez</span>
+                        <span class="user-role">Abogado</span>
+                    </div>
+                    <div class="user-list-item">
+                        <span>Juan Pérez</span>
+                        <span class="user-role">Asistente</span>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-save" style="margin-top: 20px; background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold);">
+                    <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">person_add</span> Invitar Miembro al Equipo
+                </button>
+            </div>
+
+            <div class="config-card">
+                <div class="card-header">
+                    <span class="material-symbols-outlined">security</span>
+                    <h3>Seguridad y Acceso</h3>
+                </div>
+                <div class="form-group">
+                    <label>Cambiar Contraseña LexTracker</label>
+                    <input type="password" placeholder="Contraseña actual">
+                    <input type="password" placeholder="Nueva contraseña" style="margin-top: 10px;">
+                </div>
+                <button type="button" class="btn-save">Guardar Seguridad</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

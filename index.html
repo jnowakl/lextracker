@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexTracker | Tu Estudio en la palma de la mano</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --dark-bg: #121212; 
+            --dark-card: #1e1e1e; 
+            --accent-gold: #c9a55c; 
+            --accent-gold-glow: #e6d3a0; 
+            --light-text: #ffffff;
+            --muted-text: #aaaaaa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* BARRA DE NAVEGACIÓN */
+        header {
+            background-color: rgba(18, 18, 18, 0.95);
+            padding: 1rem 10%; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-sizing: border-box;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 2.2rem;
+            color: var(--accent-gold);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--light-text);
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px; 
+            align-items: center;
+        }
+
+        nav a {
+            font-size: 1rem;
+            color: var(--muted-text);
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-gold);
+        }
+
+        .btn-login {
+            background-color: transparent;
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: var(--accent-gold);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--accent-gold-glow);
+        }
+
+        /* SECCIÓN HERO */
+        .hero {
+            height: 80vh; 
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('Estudio.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px; 
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--accent-gold); 
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-start {
+            display: inline-block;
+            background-color: var(--accent-gold);
+            color: var(--dark-bg);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(201, 165, 92, 0.4);
+        }
+
+        /* SECCIÓN DE BENEFICIOS */
+        .benefits {
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .benefits h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--light-text);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background-color: var(--dark-card);
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid #333; 
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(201, 165, 92, 0.2);
+        }
+
+        .card-icon-box {
+            background-color: rgba(201, 165, 92, 0.1);
+            color: var(--accent-gold);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: var(--muted-text);
+            font-size: 1rem;
+            max-width: 280px;
+        }
+
+        .btn-planes {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: transparent;
+            color: var(--accent-gold);
+            border: 2px solid var(--accent-gold);
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 50px;
+        }
+
+        .btn-planes:hover {
+            background-color: var(--accent-gold);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--accent-gold-glow);
+            transform: translateY(-3px);
+        }
+
+        /* SECCIÓN PLANES */
+        .planes {
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .plan-card {
+            background: var(--dark-card);
+            padding: 50px 30px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .plan-card.featured {
+            border-color: var(--accent-gold);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(201, 165, 92, 0.1);
+        }
+
+        .plan-card h3 { font-size: 1.8rem; margin: 0; }
+        .price { font-size: 3rem; font-weight: bold; color: var(--accent-gold); margin: 20px 0; }
+        .price span { font-size: 1rem; color: var(--muted-text); }
+        .plan-card ul li { margin: 15px 0; }
+
+        .badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-gold);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-plan-select {
+            display: block;
+            padding: 12px;
+            border: 1px solid var(--accent-gold);
+            border-radius: 5px;
+            color: var(--accent-gold);
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn-plan-select:hover {
+            background: var(--accent-gold);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-gold-glow);
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            nav ul { display: none; } 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <span class="material-symbols-outlined logo-icon">gavel</span>
+            <div class="logo-text">LexTracker</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#beneficios">Beneficios</a></li>
+                <li><a href="#planes">Planes</a></li>
+                <li><a href="login.html" class="btn-login">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>LexTracker</h1>
+            <p>Tu Estudio Jurídico en la palma de la mano</p>
+            <a href="login.html" class="btn-start">Iniciar Sesión</a>
+        </div>
+    </section>
+
+    <section class="benefits" id="beneficios">
+        <h2>Beneficios de contratar el sistema</h2>
+        <div class="benefits-grid">
+            <div class="card">
+                <div class="card-icon-box">
+                    <span class="material-symbols-outlined card-icon">monitoring</span>
+                </div>
+                <h3>Monitoreo 24/7</h3>
+                <p>Control de tus procesos judiciales 24 horas del día, 7 días a la semana.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-box">
+                    <span class="material-symbols-outlined card-icon">calendar_month</span>
+                </div>
+                <h3>Calendario de Audiencias</h3>
+                <p>Agendamiento automático o manual de las audiencias y diligencias programadas.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-box">
+                    <span class="material-symbols-outlined card-icon">notifications_active</span>
+                </div>
+                <h3>Alertas vía WhatsApp</h3>
+                <p>Recibe notificaciones vía WhatsApp de tus audiencias y diligencias judiciales.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-box">
+                    <span class="material-symbols-outlined card-icon">folder_special</span>
+                </div>
+                <h3>Gestión Unificada</h3>
+                <p>Centraliza y organiza todos tus juicios en un solo panel profesional.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-box">
+                    <span class="material-symbols-outlined card-icon">mail_lock</span>
+                </div>
+                <h3>Multi-Correo</h3>
+                <p>Integra cualquier cuenta de correo (Gmail, Outlook) para sincronizar avisos.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-box">
+                    <span class="material-symbols-outlined card-icon">psychology</span>
+                </div>
+                <h3>Escritos con IA</h3>
+                <p>Crea escritos con la ayuda de Inteligencia Artificial.</p>
+            </div>
+        </div>
+        <a href="#demo" class="btn-planes">Iniciar Demo</a>
+    </section>
+
+    <section class="planes" id="planes">
+        <h2>Planes de suscripción</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+            
+            <div class="plan-card">
+                <h3>Abogado Independiente</h3>
+                <div class="price">Gratis<span>/mes</span></div>
+                <ul style="list-style: none; padding: 0; color: var(--muted-text); margin: 30px 0;">
+                    <li>✓ Hasta 5 procesos</li>
+                    <li>✓ Alertas vía WhatsApp</li>
+                    <li>✓ 1 Usuario</li>
+                    <li>✓ Calendario básico</li>
+                </ul>
+                <a href="#" class="btn-plan-select">Elegir Plan</a>
+            </div>
+
+            <div class="plan-card featured">
+                <div class="badge">RECOMENDADO</div>
+                <h3>Abogado Profesional</h3>
+                <div class="price">$35+IVA<span>/mes</span></div>
+                <ul style="list-style: none; padding: 0; color: var(--muted-text); margin: 30px 0;">
+                    <li>✓ Procesos ilimitados</li>
+                    <li>✓ Alertas vía WhatsApp</li>
+                    <li>✓ Acceso a 2 Asistentes</li>
+                    <li>✓ Escritos con IA (Básico)</li>
+                </ul>
+                <a href="#" class="btn-plan-select" style="background: var(--accent-gold); color: #000;">Elegir Plan</a>
+            </div>
+
+            <div class="plan-card">
+                <h3>Estudio Jurídico</h3>
+                <div class="price">$70+IVA<span>/mes</span></div>
+                <ul style="list-style: none; padding: 0; color: var(--muted-text); margin: 30px 0;">
+                    <li>✓ Procesos Ilimitados</li>
+                    <li>✓ Multi-usuario (3 abogados)</li>
+                    <li>✓ Acceso a 10 Asistentes</li>
+                    <li>✓ IA Premium + Análisis de Casos</li>
+                </ul>
+                <a href="#" class="btn-plan-select">Elegir Plan</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
